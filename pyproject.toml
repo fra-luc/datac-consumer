@@ -1,0 +1,31 @@
+[tool.poetry]
+name = "datac-consumer"
+version = "0.1.0"
+description = "Consumer of Atac feed and schedule updates"
+authors = ["Francesco Lucantoni <fran.lucantoni@gmail.com>"]
+readme = "README.md"
+packages = [{include = "*", from="src"}]
+
+[tool.poetry.dependencies]
+python = ">=3.9,<3.13"
+aiohttp = "^3.9.3"
+pydantic-settings = "^2.2.1"
+
+[tool.poetry.group.dev.dependencies]
+isort = "^5.13.2"
+pyinstaller = "^6.4.0"
+pylint = "^3.1.0"
+mypy = "^1.8.0"
+
+[tool.black]
+line-length = 120
+
+[tool.isort]
+profile = "black"
+
+[tool.pylint."MESSAGE CONTROL"]
+max-line-length = 120
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
