@@ -7,7 +7,7 @@ permissions:
   contents: read
 
 jobs:
-  build:
+  check:
     runs-on: ubuntu-latest
 
     steps:
@@ -21,11 +21,11 @@ jobs:
       with:
         poetry-version: "1.8.2"
     - uses: actions/cache@v3
-      name: Define a cache for the virtual environment based on the dependencies lock file
+      name: Define a dependencies cache
       with:
         path: ./.venv
         key: venv-${{ hashFiles('poetry.lock') }}
     - name: Install dependencies
-      run: poetry install
+      run: poetry install --with dev
     - name: Run checks
       run: make check
