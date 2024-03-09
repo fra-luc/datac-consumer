@@ -13,10 +13,12 @@ pydantic-settings = "^2.2.1"
 
 [tool.poetry.group.dev.dependencies]
 isort = "^5.13.2"
-pyinstaller = "^6.4.0"
 pylint = "^3.1.0"
 mypy = "^1.8.0"
 black = "^24.2.0"
+
+[tool.poetry.group.build.dependencies]
+pyinstaller = "^6.4.0"
 
 [tool.black]
 line-length = 120
