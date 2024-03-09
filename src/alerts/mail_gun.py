@@ -7,10 +7,6 @@ from alerts.interface import AlertsInterface
 
 
 class MailGunSettings(BaseSettings):
-    """
-    Settings for the MailGun service
-    """
-
     domain_name: str
     """
     The MailGun domain name ('sandbox*.mailgun.org')
@@ -31,8 +27,14 @@ class MailGunSettings(BaseSettings):
 class MailGunAlerts(AlertsInterface):
     settings: MailGunSettings
 
-    async def notify_feed_download_failure(self, exc: Exception):
-        await self.__send_mail("⚠️ Feed Download Failure", "testo")
+    async def notify_real_time_feed_download_failure(self, exc: Exception):
+        await self.__send_mail("⚠️ Feed Download Failure", "Feed download failed")
+
+    async def notify_static_gtfs_download_failure(self, exc: Exception):
+        await self.__send_mail("⚠️ Static GTFS Download Failure", "Static GTFS download failed")
+
+    async def notify_file_system_almost_full(self, free_space: int):
+        await self.__send_mail("⚠️ File System almost full!", f"{free_space} GB of memory left!")
 
     async def __send_mail(self, subject: str, text: str):
         async with aiohttp.ClientSession() as session:

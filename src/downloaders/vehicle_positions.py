@@ -16,18 +16,22 @@ class VehiclePositionsDownloaderSettings(DownloaderSettings):
 class VehiclePositionsDownloader(Downloader):
     def __post_init__(self):
         self.logger = logging.getLogger(__name__)
-        configure_logger(self.logger, logging.DEBUG)
+        configure_logger(self.logger, self.settings.logging_level)
 
     async def run(self):
         while True:
             message = await self._retry_download()
-            self.file_system.save_real_time_gtfs_message(message)
+            await self.file_system.save_real_time_gtfs_message(message)
+            if await self.file_system.is_almost_full():
+                self.logger.warning("File system is almost full!")
+            self.logger.debug("Saved feed message!")
             await asyncio.sleep(self.settings.frequency)
 
     async def _download(self):
-        self.logger.debug("Downloading message...")
+        self.logger.debug("Downloading feed message...")
         async with self.session.get(self.settings.url) as response:
             return await response.content.read()
 
     async def _on_download_failure(self, exc: Exception):
-        self.alerts.notify_feed_download_failure(exc)
+        self.logger.error("Failed to download feed message!")
+        await self.alerts.notify_real_time_feed_download_failure(exc)

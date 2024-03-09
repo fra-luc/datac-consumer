@@ -9,6 +9,10 @@ from file_system.interface import FileSystemInterface
 
 
 class DownloaderSettings(BaseSettings):
+    """
+    Settings for Downloader istances
+    """
+
     url: str
     """
     Real Time GTFS URL
@@ -25,6 +29,10 @@ class DownloaderSettings(BaseSettings):
     """
     Frequency of download attempts in seconds
     """
+    logging_level: str
+    """
+    Logging level
+    """
 
 
 @dataclass
@@ -34,7 +42,7 @@ class Downloader:
     file_system: FileSystemInterface
     settings: DownloaderSettings
 
-    async def _retry_download(self): # TODO DECORATOR!
+    async def _retry_download(self):
         attempt_num = 0
         while True:
             try:
@@ -53,4 +61,7 @@ class Downloader:
         raise NotImplementedError
 
     async def run(self):
+        """
+        Starts downloading
+        """
         raise NotImplementedError

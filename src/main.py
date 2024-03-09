@@ -12,6 +12,11 @@ from file_system.local import LocalFileSystem, LocalFileSystemSettings
 
 
 async def main():
+    """
+    datac consumer entrypoint:
+        * consumes and downloads the real-time GTS feed
+        * downloads static GTFS updates when available
+    """
     async with aiohttp.ClientSession() as session:
         mail_gun_alerts = MailGunAlerts(settings=MailGunSettings())
         local_fs = LocalFileSystem(

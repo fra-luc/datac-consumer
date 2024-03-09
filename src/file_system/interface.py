@@ -4,11 +4,20 @@ from datetime import datetime
 
 @dataclass
 class FileSystemInterface:
-    def save_real_time_gtfs_message(self, message: bytes):
+    async def save_real_time_gtfs_message(self, message: bytes):
+        """
+        Save a real-time GTFS message content in the file system
+        """
         raise NotImplementedError
 
-    def save_static_gtfs_data(self, content: bytes, last_modified: datetime):
+    async def save_static_gtfs_data(self, content: bytes, last_modified: datetime):
+        """
+        Save a static GTFS file content in the file system
+        """
         raise NotImplementedError
 
-    def is_file_system_almost_full(self):
+    async def is_almost_full(self):
+        """
+        Checks whether the file system is almost full
+        """
         raise NotImplementedError
