@@ -12,7 +12,7 @@ lint:
 	poetry run pylint src
 
 release:
-	poetry run pyinstaller src/main.py -n data-consumer
+	poetry run pyinstaller src/main.py -n datac-consumer
 
 type-check:
 	poetry run mypy src
