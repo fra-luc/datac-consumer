@@ -30,7 +30,7 @@ jobs:
     - name: Install dependencies
       run: poetry install --with build
     - name: Build
-      run: pyinstaller src/main.py -n datac-consumer
+      run: make release
     - name: Upload executable
       uses: actions/upload-artifact@v4
       with:

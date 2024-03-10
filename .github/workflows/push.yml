@@ -28,6 +28,6 @@ jobs:
         path: ./.venv
         key: venv-${{ hashFiles('poetry.lock') }}
     - name: Install dependencies
-      run: poetry install --with dev & which pyinstaller
+      run: poetry install --with dev
     - name: Run checks
       run: make check

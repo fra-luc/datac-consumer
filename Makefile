@@ -11,5 +11,8 @@ format-check:
 lint:
 	poetry run pylint src
 
+release:
+	poetry run pyinstaller src/main.py -n data-consumer
+
 type-check:
 	poetry run mypy src
