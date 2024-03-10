@@ -35,4 +35,4 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: datac-consumer
-        path: dist/datac-consumer
+        path: ./dist/datac-consumer/
