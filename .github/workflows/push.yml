@@ -13,16 +13,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Set up Python
-      uses: actions/setup-python@v3
+      uses: actions/setup-python@v4
       with:
         python-version: "3.9.18"
     - name: Install Poetry
       uses: abatilo/actions-poetry@v2
       with:
         poetry-version: "1.8.2"
-    - uses: actions/cache@v3
+    - uses: actions/cache@v4
       name: Define a dependencies cache
       with:
         path: ./.venv
