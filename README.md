@@ -28,7 +28,7 @@ The script creates a log file like this:
 $ cat datac_consumer_monitor.log
 2024-03-24 13:46:40 - OK
 2024-03-24 13:47:10 - OK
-2024-03-24 13:47:40 - Started the process
+2024-03-24 13:47:40 - Restart Process
 2024-03-24 13:48:11 - OK
 2024-03-24 13:48:41 - OK
 ```

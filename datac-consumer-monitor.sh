@@ -14,7 +14,7 @@ while true; do
     else
         # Start the process using poetry
         nohup poetry run python3 src/main.py > datac-consumer.log 2>&1 </dev/null &
-        echo "$CHECK_TIME - Started the process" >> "$LOG_FILE"
+        echo "$CHECK_TIME - Restart Process" >> "$LOG_FILE"
     fi
 
     # Wait for 30 seconds before checking again
