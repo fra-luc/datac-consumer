@@ -301,7 +301,7 @@
         "type": "prometheus",
         "uid": "${DS_PROMETHEUS}"
       },
-      "description": "Non available RAM memory",
+      "description": "Memory that is currently being used.\n\nIn this expression, \"used memory\" is derived by considering the memory that is not marked as available. node_memory_MemAvailable_bytes includes not just the memory that is currently not used by any process, but also memory that can be made available quickly for new processes. This can include, for example, memory from caches and buffers that the system can reclaim without swapping. Thus, this metric provides a more nuanced view of memory utilization that accounts for Linux's memory management practices, where some memory types, though technically in use, can be easily repurposed for other needs without significant performance penalties.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -364,15 +364,80 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "((node_memory_MemTotal_bytes{instance=\"$node\", job=\"$job\"} - node_memory_MemFree_bytes{instance=\"$node\", job=\"$job\"}) / node_memory_MemTotal_bytes{instance=\"$node\", job=\"$job\"}) * 100",
+          "expr": "(1 - (node_memory_MemAvailable_bytes{instance=\"$node\", job=\"$job\"} / node_memory_MemTotal_bytes{instance=\"$node\", job=\"$job\"})) * 100",
           "format": "time_series",
-          "hide": true,
+          "hide": false,
           "instant": true,
           "intervalFactor": 1,
           "range": false,
-          "refId": "A",
+          "refId": "B",
           "step": 240
+        }
+      ],
+      "title": "RAM Used",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "Percentage of the total memory that is currently being used. \n\nUnlike the other expression, this one does not consider memory that is in use but can be easily reclaimed (such as cached memory). In this expression, \"used memory\" is calculated by simply subtracting free memory (node_memory_MemFree_bytes) from the total memory. Here, \"free memory\" is strictly the memory that is completely unoccupied and available for new processes. This method does not account for memory that is currently in use for caches, buffers, or similar, which can be misleading in Linux systems where such usage is common for performance reasons. It provides a more traditional and stricter view of memory usage.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 1,
+          "mappings": [],
+          "max": 100,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "rgba(50, 172, 45, 0.97)",
+                "value": null
+              },
+              {
+                "color": "rgba(237, 129, 40, 0.89)",
+                "value": 80
+              },
+              {
+                "color": "rgba(245, 54, 54, 0.9)",
+                "value": 90
+              }
+            ]
+          },
+          "unit": "percent"
         },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 9,
+        "y": 1
+      },
+      "hideTimeOverride": false,
+      "id": 330,
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto"
+      },
+      "pluginVersion": "10.4.0",
+      "targets": [
         {
           "datasource": {
             "type": "prometheus",
@@ -380,7 +445,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "(1 - (node_memory_MemAvailable_bytes{instance=\"$node\", job=\"$job\"} / node_memory_MemTotal_bytes{instance=\"$node\", job=\"$job\"})) * 100",
+          "expr": "((node_memory_MemTotal_bytes{instance=\"$node\", job=\"$job\"} - node_memory_MemFree_bytes{instance=\"$node\", job=\"$job\"}) / node_memory_MemTotal_bytes{instance=\"$node\", job=\"$job\"}) * 100",
           "format": "time_series",
           "hide": false,
           "instant": true,
@@ -442,7 +507,7 @@
       "gridPos": {
         "h": 4,
         "w": 3,
-        "x": 9,
+        "x": 12,
         "y": 1
       },
       "id": 21,
@@ -479,95 +544,6 @@
         }
       ],
       "title": "SWAP Used",
-      "type": "gauge"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
-      },
-      "description": "Used Root FS",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "decimals": 1,
-          "mappings": [
-            {
-              "options": {
-                "match": "null",
-                "result": {
-                  "text": "N/A"
-                }
-              },
-              "type": "special"
-            }
-          ],
-          "max": 100,
-          "min": 0,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "rgba(50, 172, 45, 0.97)",
-                "value": null
-              },
-              {
-                "color": "rgba(237, 129, 40, 0.89)",
-                "value": 80
-              },
-              {
-                "color": "rgba(245, 54, 54, 0.9)",
-                "value": 90
-              }
-            ]
-          },
-          "unit": "percent"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 4,
-        "w": 3,
-        "x": 12,
-        "y": 1
-      },
-      "id": 154,
-      "options": {
-        "minVizHeight": 75,
-        "minVizWidth": 75,
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showThresholdLabels": false,
-        "showThresholdMarkers": true,
-        "sizing": "auto"
-      },
-      "pluginVersion": "10.4.0",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
-          "editorMode": "code",
-          "exemplar": false,
-          "expr": "100 - ((node_filesystem_avail_bytes{instance=\"$node\",job=\"$job\",mountpoint=\"/\",fstype!=\"rootfs\"} * 100) / node_filesystem_size_bytes{instance=\"$node\",job=\"$job\",mountpoint=\"/\",fstype!=\"rootfs\"})",
-          "format": "time_series",
-          "instant": true,
-          "intervalFactor": 1,
-          "range": false,
-          "refId": "A",
-          "step": 240
-        }
-      ],
-      "title": "Root FS Used",
       "type": "gauge"
     },
     {
@@ -1151,6 +1127,9 @@
             },
             "insertNulls": false,
             "lineInterpolation": "smooth",
+            "lineStyle": {
+              "fill": "solid"
+            },
             "lineWidth": 2,
             "pointSize": 5,
             "scaleDistribution": {
@@ -1160,7 +1139,7 @@
             "spanNulls": false,
             "stacking": {
               "group": "A",
-              "mode": "normal"
+              "mode": "none"
             },
             "thresholdsStyle": {
               "mode": "off"
@@ -1182,23 +1161,7 @@
           },
           "unit": "percent"
         },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "{id=\"/\",instance=\"cadvisor:8080\",job=\"prometheus\"}"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "#BA43A9",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          }
-        ]
+        "overrides": []
       },
       "gridPos": {
         "h": 6,
@@ -1221,6 +1184,19 @@
       },
       "pluginVersion": "8.1.5",
       "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "(1 - (node_memory_MemAvailable_bytes{instance=\"$node\", job=\"$job\"} / node_memory_MemTotal_bytes{instance=\"$node\", job=\"$job\"})) * 100",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "B"
+        },
         {
           "datasource": {
             "type": "prometheus",
@@ -1338,6 +1314,95 @@
       "type": "timeseries"
     },
     {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "Used Root FS",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 1,
+          "mappings": [
+            {
+              "options": {
+                "match": "null",
+                "result": {
+                  "text": "N/A"
+                }
+              },
+              "type": "special"
+            }
+          ],
+          "max": 100,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "rgba(50, 172, 45, 0.97)",
+                "value": null
+              },
+              {
+                "color": "rgba(237, 129, 40, 0.89)",
+                "value": 80
+              },
+              {
+                "color": "rgba(245, 54, 54, 0.9)",
+                "value": 90
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 5,
+        "x": 12,
+        "y": 11
+      },
+      "id": 154,
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto"
+      },
+      "pluginVersion": "10.4.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "100 - ((node_filesystem_avail_bytes{instance=\"$node\",job=\"$job\",mountpoint=\"/\",fstype!=\"rootfs\"} * 100) / node_filesystem_size_bytes{instance=\"$node\",job=\"$job\",mountpoint=\"/\",fstype!=\"rootfs\"})",
+          "format": "time_series",
+          "instant": true,
+          "intervalFactor": 1,
+          "range": false,
+          "refId": "A",
+          "step": 240
+        }
+      ],
+      "title": "Root FS Used",
+      "type": "gauge"
+    },
+    {
       "collapsed": false,
       "gridPos": {
         "h": 1,
@@ -1379,8 +1444,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "dark-green",
-                "value": null
+                "color": "dark-green"
               },
               {
                 "color": "orange",
@@ -1494,8 +1558,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "orange",
@@ -24333,6 +24396,6 @@
   "timezone": "browser",
   "title": "Node Exporter Full",
   "uid": "rYdddlPWk",
-  "version": 6,
+  "version": 8,
   "weekStart": ""
 }
