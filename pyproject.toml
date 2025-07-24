@@ -7,18 +7,15 @@ readme = "README.md"
 packages = [{include = "*", from="src"}]
 
 [tool.poetry.dependencies]
-python = ">=3.9,<3.13"
-aiohttp = "^3.9.3"
-pydantic-settings = "^2.2.1"
+python = "^3.9"
+aiohttp = "^3.12"
+pydantic-settings = "^2.10"
 
 [tool.poetry.group.dev.dependencies]
-isort = "^5.13.2"
-pylint = "^3.1.0"
-mypy = "^1.8.0"
-black = "^24.2.0"
-
-[tool.poetry.group.build.dependencies]
-pyinstaller = "^6.4.0"
+isort = "^6.0"
+pylint = "^3.3"
+mypy = "^1.17"
+black = "^25.1"
 
 [tool.black]
 line-length = 120
