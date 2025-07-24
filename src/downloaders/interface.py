@@ -4,7 +4,6 @@ from dataclasses import dataclass
 import aiohttp
 from pydantic_settings import BaseSettings
 
-from alerts.interface import AlertsInterface
 from file_system.interface import FileSystemInterface
 
 
@@ -38,7 +37,6 @@ class DownloaderSettings(BaseSettings):
 @dataclass
 class Downloader:
     session: aiohttp.ClientSession
-    alerts: AlertsInterface
     file_system: FileSystemInterface
     settings: DownloaderSettings
 

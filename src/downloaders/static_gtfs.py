@@ -43,4 +43,3 @@ class StaticGTFSDownloader(Downloader):
 
     async def _on_download_failure(self, exc: Exception):
         self.logger.error("Static GTFS update download failed!")
-        await self.alerts.notify_static_gtfs_download_failure(exc)

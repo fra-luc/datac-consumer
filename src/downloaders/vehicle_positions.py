@@ -34,4 +34,3 @@ class VehiclePositionsDownloader(Downloader):
 
     async def _on_download_failure(self, exc: Exception):
         self.logger.error("Failed to download feed message!")
-        await self.alerts.notify_real_time_feed_download_failure(exc)
